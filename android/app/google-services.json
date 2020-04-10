@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "805961119914",
+    "firebase_url": "https://hospitalreport-250c4.firebaseio.com",
+    "project_id": "hospitalreport-250c4",
+    "storage_bucket": "hospitalreport-250c4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:805961119914:android:1d5ffaf6623241cde7b8d3",
+        "android_client_info": {
+          "package_name": "com.hospitalbaling.hospital_report"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "805961119914-masvps7dm81512lnmh8liq61ta8ck21m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD_vWH4vnW_PrUg7-JHoqWX9f8OL4dHC-k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "805961119914-masvps7dm81512lnmh8liq61ta8ck21m.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
