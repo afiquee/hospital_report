@@ -43,8 +43,16 @@ class ReportService {
   }
 
 
-  Stream<List<Report>> get reports {
-    return reportCollections
+  Stream<List<Report>> get completedReports {
+    return reportCollections.where("status",isEqualTo: "Selesai")
+        .snapshots().map((snapshot) => snapshot
+        .documents.map((doc) => Report.fromMap(doc.data))
+        .toList()
+    );
+  }
+
+  Stream<List<Report>> get incompleteReports {
+    return reportCollections.where("status",isEqualTo: "Belum Selesai")
         .snapshots().map((snapshot) => snapshot
         .documents.map((doc) => Report.fromMap(doc.data))
         .toList()

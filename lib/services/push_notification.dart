@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:hospital_report/models/message.dart';
+import 'package:hospital_report/models/notification_data.dart';
 import 'package:http/http.dart';
 
 class PushNotificationService {
@@ -13,7 +13,7 @@ class PushNotificationService {
 
   final String serverKey = 'AAAAu6cGuKo:APA91bEi_zxFoI8NZsm_ObknB9wTAez_SDWeiyCVcnnu1-S9MDPI3JZHUAECG4GexYRXC5CXOFKT6lyYnJzi1lW3CvW4X5tO1XeGenrvQ8A-z7Ro76jlZ3rwSqR4SiRWOwbDb7sIJZzm';
   final String fcmUrl = 'https://fcm.googleapis.com/fcm/send';
-  final String token = 'c-84agC-QVCp27SAEQ-8QT:APA91bGPbmC5rCOTSbuPHaMaiokiaU-nWXJtW66hERIGAdzVwsxLr4Em4WC30xtPG-qE1wcoxobGlnC12KpLfWjcoGkGNLAzaglZ8hy8ETrrSuSkwmCIwOOZTJjp2lUXwMf6gFBBYZyU';
+  final String token = 'dGYJIsWGSLCbNSY00nZSmn:APA91bEwg1EO4Ni4Q9C8pfYeP3UZv1JjeQJhKdS_-Ru-mqD1bsLAPuw7ErH_DOm6JnCOUYFqW9QVj1TXHpapQjmgJUnsK7eu9VvJR_q9kZ4wPKj97amH6QAtn94Nt3a2duILoKYKVdXp';
 
 
   Future<String> sendNotification() async {
@@ -21,11 +21,13 @@ class PushNotificationService {
     Map data = {
       'click_action':'FLUTTER_NOTIFICATION_CLICK',
       'title':'title',
-      'message':'messsage'
+      'message':'message'
     };
 
     Map message = {
-    'data': data
+      'data': data,
+      'title':'title',
+      'body':'body'
     };
 
     Map payload = {
@@ -58,21 +60,29 @@ class PushNotificationService {
   }
 
 
-  Future sendAdminNotification(Message message) async {
+  Future sendAdminNotification(NotificationData notificationData) async {
 
-    for(var token in message.tokens) {
+
+    for(var token in notificationData.tokens) {
 
       print('token $token');
 
-      Map notification = {
-        'title': message.title,
-        'body': message.body,
-        'data': message.data
+      Map data = {
+        'click_action':'FLUTTER_NOTIFICATION_CLICK',
+        'title': notificationData.title,
+        'body':notificationData.body
+      };
+
+      Map message = {
+        'data': data,
+        'title':notificationData.title,
+        'body':notificationData.body
       };
 
       Map payload = {
         'to': token,
-        'notification': notification
+        'priority':'high',
+        'notification': message
       };
 
       print(json.encode(payload));

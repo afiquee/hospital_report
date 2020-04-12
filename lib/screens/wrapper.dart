@@ -22,7 +22,6 @@ Future<dynamic> onBackgroundMessageHandler(Map<String, dynamic> message) {
 
   if (message.containsKey('notification')) {
     // Handle notification message
-    final dynamic notification = message['notification'];
   }
 
   // Or do other work.
@@ -79,21 +78,22 @@ class _WrapperState extends State<Wrapper> {
     _fcm.configure(
       onMessage: (Map<String, dynamic> message) async {
         print("onMessage: $message");
-//        showDialog(
-//          context: context,
-//          builder: (context) => AlertDialog(
-//            content: ListTile(
-//              title: Text('a'),
-//              subtitle: Text('b'),
-//            ),
-//            actions: <Widget>[
-//              FlatButton(
-//                child: Text('Ok'),
-//                onPressed: () => Navigator.of(context).pop(),
-//              ),
-//            ],
-//          ),
-//        );
+        final dynamic data = message['notification'];
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            content: ListTile(
+              title: Text(data['title'] ?? ''),
+              subtitle: Text(data['body'] ?? ''),
+            ),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('Ok'),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+            ],
+          ),
+        );
       },
       onBackgroundMessage: onBackgroundMessageHandler,
       onLaunch: (Map<String, dynamic> message) async {

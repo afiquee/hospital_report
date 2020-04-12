@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hospital_report/screens/home/home.dart';
+import 'package:hospital_report/screens/profile.dart';
 
 class NavigationBar extends StatefulWidget {
   @override
@@ -11,7 +12,9 @@ class _NavigationBarState extends State<NavigationBar> {
   int _currentIndex =0;
 
   final tabs = [
-    Home()
+    Home(),
+    null,
+    Profile()
   ];
 
   @override

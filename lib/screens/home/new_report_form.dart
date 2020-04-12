@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_form_bloc/flutter_form_bloc.dart';
-import 'package:hospital_report/models/message.dart';
+import 'package:hospital_report/models/notification_data.dart';
 import 'package:hospital_report/models/user.dart';
 import 'package:hospital_report/services/push_notification.dart';
 import 'package:hospital_report/services/report.dart';
@@ -45,89 +45,93 @@ class _ReportFormState extends State<ReportForm> {
                 ),
             )
         ),
-      child: Form(
-        key: _formKey,
-        child: Column(
-          children: <Widget>[
-            Text(
-              'Laporan Baru',
-              style: TextStyle(fontSize: 18.0),
-            ),
-            SizedBox(height: 20.0),
-            TextFormField(
-              decoration: InputDecoration(
-                labelText: 'Masalah'
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.all(8.0),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: <Widget>[
+              Text(
+                'Laporan Baru',
+                style: TextStyle(fontSize: 18.0),
               ),
-              validator: (val) => val.isEmpty ? 'Sila isi ruang masalah ' : null,
-              onChanged: (val) {
-                setState(() => _currentProblem = val);
-              },
-            ),
-            SizedBox(height: 20.0),
-            TextFormField(
-              maxLines: null,
-              keyboardType: TextInputType.multiline,
-              decoration: InputDecoration(
-                  labelText: 'Deskripsi'
-              ),
-              validator: (val) => val.isEmpty ? 'Sila isi ruang deskripsi ' : null,
-              onChanged: (val) {
-                setState(() => _currentDescription = val);
-              },
-            ),
-            SizedBox(height: 20.0),
-            DropdownButtonFormField(
-              isExpanded: true,
-
-              decoration: InputDecoration(
-                  labelText: 'Lokasi'
-              ),
-              value: _currentLocation,
-              items: location.map((location){
-                return DropdownMenuItem(
-                  value: location,
-                  child: Text(location),
-                );
-              }).toList(),
-              onChanged: (val) => setState(() => _currentLocation = val),
-            ),
-            SizedBox(height: 20.0),
-            ButtonTheme(
-              height: 50.0,
-              minWidth: double.infinity,
-              child: RaisedButton(
-                color: Colors.red[400],
-                child: Text(
-                  'Lapor',
-                  style: TextStyle(
-                    fontSize: 18.0,
-                    color: Colors.white
-                  ),
+              SizedBox(height: 20.0),
+              TextFormField(
+                decoration: InputDecoration(
+                  labelText: 'Masalah'
                 ),
-                onPressed: () async {
-                  print(_formKey.currentState.validate());
-                  if(_formKey.currentState.validate()) {
-                    setState(()  {
-                      loading = true;
-                    });
-                    await  ReportService().updateReport(
-                      _currentProblem,
-                      _currentDescription,
-                      _currentLocation,
-                      user.uid
-                    );
-                    var tokens = await UserService().getAdminToken();
-                    Message message = new Message(title: 'Laporan baharu',body: '$_currentProblem di lokasi $_currentLocation',tokens: tokens);
-                    PushNotificationService(deviceToken: tokens).sendNotification();
-                    setState(()  {
-                      loading = false;
-                    });
-                    Navigator.pop(context);
-                  }
+                validator: (val) => val.isEmpty ? 'Sila isi ruang masalah ' : null,
+                onChanged: (val) {
+                  setState(() => _currentProblem = val);
                 },
               ),
-            ),
-          ],
+              SizedBox(height: 20.0),
+              TextFormField(
+                maxLines: null,
+                keyboardType: TextInputType.multiline,
+                decoration: InputDecoration(
+                    labelText: 'Deskripsi'
+                ),
+                validator: (val) => val.isEmpty ? 'Sila isi ruang deskripsi ' : null,
+                onChanged: (val) {
+                  setState(() => _currentDescription = val);
+                },
+              ),
+              SizedBox(height: 20.0),
+              DropdownButtonFormField(
+                isExpanded: true,
+
+                decoration: InputDecoration(
+                    labelText: 'Lokasi'
+                ),
+                value: _currentLocation,
+                items: location.map((location){
+                  return DropdownMenuItem(
+                    value: location,
+                    child: Text(location),
+                  );
+                }).toList(),
+                onChanged: (val) => setState(() => _currentLocation = val),
+              ),
+              SizedBox(height: 20.0),
+              ButtonTheme(
+                height: 50.0,
+                minWidth: double.infinity,
+                child: RaisedButton(
+                  color: Colors.red[400],
+                  child: Text(
+                    'Lapor',
+                    style: TextStyle(
+                      fontSize: 18.0,
+                      color: Colors.white
+                    ),
+                  ),
+                  onPressed: () async {
+                    print(_formKey.currentState.validate());
+                    if(_formKey.currentState.validate()) {
+                      setState(()  {
+                        loading = true;
+                      });
+                      await  ReportService().updateReport(
+                        _currentProblem,
+                        _currentDescription,
+                        _currentLocation,
+                        user.uid
+                      );
+                      var tokens = await UserService().getAdminToken();
+                      print(tokens.toString());
+                      NotificationData notificationData = new NotificationData(title: 'Laporan baharu',body: '$_currentProblem di lokasi $_currentLocation',tokens: tokens);
+                      await PushNotificationService().sendAdminNotification(notificationData);
+                      setState(()  {
+                        loading = false;
+                      });
+                      Navigator.pop(context);
+                    }
+                  },
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

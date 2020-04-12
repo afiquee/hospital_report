@@ -1,4 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hospital_report/services/auth.dart';
+import 'package:hospital_report/services/user.dart';
+import 'package:hospital_report/shared/BgClipper.dart';
 import 'package:hospital_report/shared/constants.dart';
 import 'package:hospital_report/shared/loading.dart';
 import 'package:flutter/material.dart';
@@ -24,88 +27,165 @@ class _RegisterState extends State<Register> {
   String error = '';
   @override
   Widget build(BuildContext context) {
-    return loading ? Loading() :  Scaffold(
-      backgroundColor: Colors.brown[100],
-      appBar: AppBar(
-        backgroundColor: Colors.brown[400],
-        elevation: 0.0,
-        title: Text('Sign in to Brew Crew'),
-        actions: <Widget>[
-          FlatButton.icon(
-            icon: Icon(Icons.person),
-            label: Text('Sign In'),
-            onPressed: () {
-              widget.toggleView();
-
-            },
-          )
-        ],
-      ),
-      body: Container(
-          padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 50.0),
-          child: Form(
-              key: _formKey,
-              child: Column(
-                children: <Widget>[
-                  SizedBox(height: 20),
-                  TextFormField(
-                    decoration: textInputDecoration.copyWith(hintText: 'Email'),
-                    validator: (val) => val.isEmpty ? 'Enter an email' : null,
-                    onChanged: (val) {
-                      setState(() => email = val);
-
-                    },
-                  ),
-                  SizedBox(height: 20),
-                  TextFormField(
-                    decoration: textInputDecoration.copyWith(hintText: 'Name'),
-                    validator: (val) => val.isEmpty ? 'Enter a name' : null,
-                    onChanged: (val) {
-                      setState(() => name = val);
-
-                    },
-                  ),
-                  SizedBox(height: 20),
-                  TextFormField(
-                    decoration: textInputDecoration.copyWith(hintText: 'Password'),
-                    obscureText: true,
-                    validator: (val) => val.length <6 ? 'Enter a password 6+ chars long ' : null,
-                    onChanged: (val) {
-                      setState(() => password = val);
-
-                    },
-                  ),
-                  SizedBox(height: 20),
-                  RaisedButton(
-                    color: Colors.pink[400],
-                    child: Text(
-                      'Register',
-                      style: TextStyle(color: Colors.white),
+    return Scaffold(
+        backgroundColor: Colors.white,
+        body: SingleChildScrollView(
+          child: Container(
+            child: Column(
+              children: <Widget>[
+                ClipPath(
+                  clipper: BgClipper(),
+                  child: Container(
+                    width: double.infinity,
+                    height: 400,
+                    decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                            colors: <Color>[
+                              Colors.red[200],
+                              Colors.red[400]
+                            ]
+                        )
                     ),
-                    onPressed: () async {
-                      if(_formKey.currentState.validate()) {
-                        setState(() => loading = true );
-                        dynamic result = await _auth.register(email, password, name);
-                        if(result == null) {
-                          setState(() {
-                            error = 'Invalid email or password';
-                            loading = false;
-                          });
-                        }
-
-                      }
-
-                    },
-
+                    child: Center(
+                      child: Text(
+                        'Daftar Akaun',
+                        style: TextStyle(
+                            color: Colors.white,
+                            letterSpacing: 5.0,
+                            fontSize: 30.0,
+                            fontWeight: FontWeight.w500
+                        ),
+                      ),
+                    ),
                   ),
-                  SizedBox(height: 12.0),
-                  Text(
-                    error,
-                    style: TextStyle(color: Colors.red, fontSize: 14.0),
-                  )
-                ],
-              ))
-      ),
+                ),
+                Form(
+                  key: _formKey,
+                  child: Padding(
+                    padding: EdgeInsets.all(30.0),
+                    child: Column(
+                      children: <Widget>[
+                        Container(
+                          padding: EdgeInsets.all(5),
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10),
+                              boxShadow: [
+                                BoxShadow(
+                                    color: Color.fromRGBO(143, 148, 251, .2),
+                                    blurRadius: 20.0,
+                                    offset: Offset(0, 10)
+                                )
+                              ]
+                          ),
+                          child: Column(
+                            children: <Widget>[
+                              Container(
+                                padding: EdgeInsets.all(8.0),
+                                decoration: BoxDecoration(
+                                    border: Border(bottom: BorderSide(color: Colors.grey[100]))
+                                ),
+                                child: TextFormField(
+                                  validator: (val) => val.isEmpty ? 'Sila isi emel' : null,
+                                  onChanged: (val) {
+                                    setState(() => email = val);
+
+                                  },
+                                  decoration: InputDecoration(
+                                      border: InputBorder.none,
+                                      labelText: 'Emel',
+                                      labelStyle: TextStyle(color: Colors.grey[400]),
+                                      hintText: "Emel",
+                                      hintStyle: TextStyle(color: Colors.grey[400])
+                                  ),
+                                ),
+                              ),
+                              Container(
+                                padding: EdgeInsets.all(8.0),
+                                decoration: BoxDecoration(
+                                    border: Border(bottom: BorderSide(color: Colors.grey[100]))
+                                ),
+                                child: TextFormField(
+                                  validator: (val) => val.isEmpty ? 'Sila isi nama' : null,
+                                  onChanged: (val) {
+                                    setState(() => name = val);
+
+                                  },
+                                  decoration: InputDecoration(
+                                      border: InputBorder.none,
+                                      labelText: 'Nama',
+                                      labelStyle: TextStyle(color: Colors.grey[400]),
+                                      hintText: "Nama",
+                                      hintStyle: TextStyle(color: Colors.grey[400])
+                                  ),
+                                ),
+                              ),
+                              Container(
+                                padding: EdgeInsets.all(8.0),
+                                child: TextFormField(
+                                  obscureText: true,
+                                  validator: (val) => val.isEmpty ? 'Sila isi kata laluan' : null,
+                                  onChanged: (val) {
+                                    setState(() => password = val);
+
+                                  },
+                                  decoration: InputDecoration(
+                                      border: InputBorder.none,
+                                      hintText: "Kata Laluan",
+                                      labelText: 'Kata Laluan',
+                                      labelStyle: TextStyle(color: Colors.grey[400]),
+                                      hintStyle: TextStyle(color: Colors.grey[400])
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: 30,),
+                        ButtonTheme(
+                          height: 50.0,
+                          minWidth: double.infinity,
+                          child: RaisedButton(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: new BorderRadius.circular(18.0)
+                            ),
+                            onPressed: () async {
+                              if(_formKey.currentState.validate()) {
+                                setState(() => loading = true );
+                                dynamic result = await _auth.register(email, password, name);
+                                if(result == null) {
+                                  setState(() {
+                                    error = 'Emel telah wujud';
+                                    loading = false;
+                                  });
+                                }
+                              }
+                            },
+                            color: Colors.red[400],
+                            child: Text(
+                              'Log Masuk',
+                              style: TextStyle(color: Colors.white),
+                            ),
+
+                          ),
+                        ),
+                        SizedBox(height: 70,),
+                        FlatButton(
+                          child: Text('Log Masuk', style: TextStyle(
+                              color: Colors.red[400]
+                          ),),
+                          onPressed: () {
+                            widget.toggleView();
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
+        )
     );
   }
 }

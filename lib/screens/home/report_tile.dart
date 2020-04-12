@@ -7,6 +7,14 @@ class ReportTile extends StatelessWidget {
   final Report report;
   ReportTile({this.report});
 
+  String formatDate(DateTime dateTime){
+    return '${dateTime.day}/${dateTime.month}/${dateTime.year}';
+  }
+
+  String formatTime(DateTime dateTime){
+    return '${dateTime.hour}:${dateTime.minute}';
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -16,6 +24,13 @@ class ReportTile extends StatelessWidget {
         child: ListTile(
           title: Text(report.problem),
           subtitle: Text(report.location),
+          trailing: Column(
+            children: <Widget>[
+              Text(formatDate(report.reportTime)),
+              Text(formatTime(report.reportTime))
+            ],
+            
+          ),
         ),
       ),
     );

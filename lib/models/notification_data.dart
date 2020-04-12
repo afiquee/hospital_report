@@ -1,5 +1,5 @@
 
-class Message {
+class NotificationData {
   final String title;
   final String body;
   final Map data = {
@@ -7,7 +7,7 @@ class Message {
   };
   final List<String> tokens;
 
-  Message({this.title,this.body,this.tokens});
+  NotificationData({this.title,this.body,this.tokens});
 
 
 

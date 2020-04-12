@@ -2,8 +2,10 @@ import 'dart:async';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:hospital_report/models/notification_data.dart';
 import 'package:hospital_report/models/report.dart';
 import 'package:hospital_report/models/user.dart';
+import 'package:hospital_report/screens/admin/admin_report_list.dart';
 import 'package:hospital_report/screens/home/new_report_form.dart';
 import 'package:hospital_report/screens/second_page.dart';
 import 'package:hospital_report/services/auth.dart';
@@ -72,55 +74,10 @@ class _HomeState extends State<Home> {
 
     if(user != null) {
       if(user.role == 'Admin'){
-        return StreamProvider<List<Report>>.value(
-          value: ReportService().reports,
-          child: Scaffold(
-            backgroundColor: Colors.brown[50],
-            appBar: AppBar(
-              iconTheme: IconThemeData(
-                  color: Colors.red
-              ),
-              title: Text('Brew Crew',style: TextStyle(
-                  color: Colors.red
-              ),),
-              backgroundColor: Colors.white,
-              elevation: 0.0,
-              actions: <Widget>[
-                FlatButton.icon(
-                  icon: Icon(Icons.person),
-                  label: Text('logout'),
-                  onPressed: () async{
-                    await _auth.signOut();
-
-                  },
-                ),
-                FlatButton.icon(
-                  icon: Icon(Icons.settings),
-                  label: Text('Settings'),
-                  onPressed: () async{
-
-                    var tokens = await UserService().getAdminToken();
-                    showOngoingNotification(notifications,
-                        title: 'Tite', body: 'Body');
-                    //String response = await PushNotificationService().sendNotification();
-                    //print(response);
-                  },
-                )
-              ],
-            ),
-            body: Container(
-                child: ReportList()
-            ),
-            floatingActionButton: FloatingActionButton.extended(
-              label: Text('Tambah Laporan'),
-              icon: Icon(Icons.add),
-              onPressed: () => _showReportPanel(),
-            ),
-          ),
-        );
+        return AdminReportList();
       }  else
         return StreamProvider<List<Report>>.value(
-          value: ReportService().reports,
+          value: ReportService().incompleteReports,
           child: Scaffold(
             backgroundColor: Colors.brown[50],
             appBar: AppBar(
