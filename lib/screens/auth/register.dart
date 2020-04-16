@@ -23,11 +23,12 @@ class _RegisterState extends State<Register> {
 
   String email = '';
   String password = '';
+  String confirm = '';
   String name = '';
   String error = '';
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return loading ? Loading() : Scaffold(
         backgroundColor: Colors.white,
         body: SingleChildScrollView(
           child: Container(
@@ -122,9 +123,12 @@ class _RegisterState extends State<Register> {
                               ),
                               Container(
                                 padding: EdgeInsets.all(8.0),
+                                decoration: BoxDecoration(
+                                    border: Border(bottom: BorderSide(color: Colors.grey[100]))
+                                ),
                                 child: TextFormField(
                                   obscureText: true,
-                                  validator: (val) => val.isEmpty ? 'Sila isi kata laluan' : null,
+                                  validator: (val) => val.length <6 ? 'Kata laluan mesti 6 angka ke atas' : null,
                                   onChanged: (val) {
                                     setState(() => password = val);
 
@@ -137,11 +141,34 @@ class _RegisterState extends State<Register> {
                                       hintStyle: TextStyle(color: Colors.grey[400])
                                   ),
                                 ),
+                              ),
+                              Container(
+                                padding: EdgeInsets.all(8.0),
+                                child: TextFormField(
+                                  obscureText: true,
+                                  validator: (val) => val.length <6 ? 'Kata laluan mesti 6 angka ke atas' : null,
+                                  onChanged: (val) {
+                                    setState(() => confirm = val);
+
+                                  },
+                                  decoration: InputDecoration(
+                                      border: InputBorder.none,
+                                      hintText: "Sahkan Kata Laluan",
+                                      labelText: 'Sahkan Kata Laluan',
+                                      labelStyle: TextStyle(color: Colors.grey[400]),
+                                      hintStyle: TextStyle(color: Colors.grey[400])
+                                  ),
+                                ),
                               )
                             ],
                           ),
                         ),
                         SizedBox(height: 30,),
+                        Text(
+                          error,
+                          style: TextStyle(color: Colors.red, fontSize: 14.0),
+                        ),
+                        SizedBox(height: 30.0),
                         ButtonTheme(
                           height: 50.0,
                           minWidth: double.infinity,
@@ -151,11 +178,19 @@ class _RegisterState extends State<Register> {
                             ),
                             onPressed: () async {
                               if(_formKey.currentState.validate()) {
+                                if(password != confirm) {
+                                  setState(() {
+                                    error = 'Kata laluan tidak sama';
+                                    loading = false;
+                                  });
+                                  return;
+                                }
                                 setState(() => loading = true );
                                 dynamic result = await _auth.register(email, password, name);
+                                print('result : '+result.toString());
                                 if(result == null) {
                                   setState(() {
-                                    error = 'Emel telah wujud';
+                                    error = 'Emel tidak sah';
                                     loading = false;
                                   });
                                 }
@@ -163,7 +198,7 @@ class _RegisterState extends State<Register> {
                             },
                             color: Colors.red[400],
                             child: Text(
-                              'Log Masuk',
+                              'Daftar',
                               style: TextStyle(color: Colors.white),
                             ),
 

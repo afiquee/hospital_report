@@ -71,6 +71,11 @@ class _SignInState extends State<SignIn> {
                       },
                     ),
                     SizedBox(height: 20),
+                    Text(
+                      error,
+                      style: TextStyle(color: Colors.red, fontSize: 14.0),
+                    ),
+                    SizedBox(height: 12.0),
                     RaisedButton(
                       color: Colors.pink[400],
                       child: Text(
@@ -80,23 +85,27 @@ class _SignInState extends State<SignIn> {
                       onPressed: () async {
                         if(_formKey.currentState.validate()) {
                           setState(() => loading = true );
+                          print('loading: ${loading}');
                           FirebaseUser user = await _auth.signIn(email, password);
-                          dynamic token = await UserService(uid:user.uid).saveDeviceToken();
-                          if(token == null) {
+                          print('user : ${user}');
+                          if(user == null) {
                             setState(() {
                               error = 'Invalid email or password';
                               loading = false;
                             });
                           }
-
+                          else {
+                            dynamic token = await UserService(uid:user.uid).saveDeviceToken();
+                            if(token == null) {
+                              setState(() {
+                                error = 'Invalid email or password';
+                                loading = false;
+                              });
+                            }
+                          }
                         }
                       },
                     ),
-                    SizedBox(height: 12.0),
-                    Text(
-                      error,
-                      style: TextStyle(color: Colors.red, fontSize: 14.0),
-                    )
                   ],
                 ))
 

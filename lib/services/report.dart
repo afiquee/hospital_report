@@ -1,8 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hospital_report/models/report.dart';
-import 'package:hospital_report/models/user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:hospital_report/services/auth.dart';
 
 class ReportService {
 
@@ -27,6 +25,23 @@ class ReportService {
     });
   }
 
+  Future<List<Report>> getReportForPrint() async {
+    var list = await reportCollections.where("status",isEqualTo: "Selesai")
+        .getDocuments().then((data) => data.documents.map((doc) {
+          return Report.fromMap(doc.documentID, doc.data);
+    }).toList());
+
+    return list;
+
+  }
+
+  Future completeReport() async {
+    return await reportCollections.document(rID).updateData({
+      'reportTime': new DateTime.now(),
+      'status': 'Selesai',
+    });
+  }
+
   List<Report> _reportListFromSnapshot(QuerySnapshot snapshot) {
     return snapshot.documents.map( (doc) {
       return Report(
@@ -42,19 +57,39 @@ class ReportService {
     }).toList();
   }
 
-
-  Stream<List<Report>> get completedReports {
-    return reportCollections.where("status",isEqualTo: "Selesai")
+  Stream<List<Report>> get incompleteReports {
+    return reportCollections.where("status",isEqualTo: "Belum Selesai")
         .snapshots().map((snapshot) => snapshot
-        .documents.map((doc) => Report.fromMap(doc.data))
+        .documents.map((doc) => Report.fromMap(doc.documentID,doc.data))
         .toList()
     );
   }
 
-  Stream<List<Report>> get incompleteReports {
-    return reportCollections.where("status",isEqualTo: "Belum Selesai")
+
+  Stream<List<Report>> get completedReports {
+    return reportCollections.where("status",isEqualTo: "Selesai")
         .snapshots().map((snapshot) => snapshot
-        .documents.map((doc) => Report.fromMap(doc.data))
+        .documents.map((doc) => Report.fromMap(doc.documentID,doc.data))
+        .toList()
+    );
+  }
+
+  Stream<List<Report>> getUserCompleteReports(String uid) {
+    return reportCollections
+        .where('status',isEqualTo: 'Selesai')
+        .where('reporter',isEqualTo: uid)
+        .snapshots().map((snapshot) => snapshot
+        .documents.map((doc) => Report.fromMap(doc.documentID,doc.data))
+        .toList()
+    );
+  }
+
+  Stream<List<Report>> getUserIncompleteReports(String uid) {
+    return reportCollections
+        .where('status',isEqualTo: 'Belum Selesai')
+        .where('reporter',isEqualTo: uid)
+        .snapshots().map((snapshot) => snapshot
+        .documents.map((doc) => Report.fromMap(doc.documentID,doc.data))
         .toList()
     );
   }

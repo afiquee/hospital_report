@@ -12,18 +12,34 @@ class UserService {
   final CollectionReference userCollections = Firestore.instance.collection('user');
   final FirebaseMessaging _fcm = FirebaseMessaging();
 
-  Future updateUser(String name, String token) async {
+  Future updateUser(String email, String name, String token) async {
     return await userCollections.document(uid).setData({
+      'email':email,
       'name':name,
       'token':token
     });
   }
+
+  Future getUser() async {
+    return await userCollections.document(uid)
+        .get()
+        .then((doc) => User.fromMap(doc.data));
+  }
+
 
   Stream <User> user (uid){
     return userCollections
         .document(uid)
         .snapshots()
         .map( (snap) => User.fromMap(snap.data));
+  }
+
+  Stream<List<User>> get users {
+    return userCollections
+        .snapshots().map((snapshot) => snapshot
+        .documents.map((doc) => User.fromMap(doc.data))
+        .toList()
+    );
   }
 
   Future saveDeviceToken() async {
@@ -34,9 +50,8 @@ class UserService {
     // Save it to Firestore
     if (fcmToken != null) {
       return userCollections
-      .document(uid)
-      .setData(({'token':fcmToken}),merge: true);
-
+          .document(uid)
+          .setData(({'token': fcmToken}), merge: true);
     }
   }
   

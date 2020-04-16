@@ -13,25 +13,25 @@ class PushNotificationService {
 
   final String serverKey = 'AAAAu6cGuKo:APA91bEi_zxFoI8NZsm_ObknB9wTAez_SDWeiyCVcnnu1-S9MDPI3JZHUAECG4GexYRXC5CXOFKT6lyYnJzi1lW3CvW4X5tO1XeGenrvQ8A-z7Ro76jlZ3rwSqR4SiRWOwbDb7sIJZzm';
   final String fcmUrl = 'https://fcm.googleapis.com/fcm/send';
-  final String token = 'dGYJIsWGSLCbNSY00nZSmn:APA91bEwg1EO4Ni4Q9C8pfYeP3UZv1JjeQJhKdS_-Ru-mqD1bsLAPuw7ErH_DOm6JnCOUYFqW9QVj1TXHpapQjmgJUnsK7eu9VvJR_q9kZ4wPKj97amH6QAtn94Nt3a2duILoKYKVdXp';
+  //final String token = 'dGYJIsWGSLCbNSY00nZSmn:APA91bEwg1EO4Ni4Q9C8pfYeP3UZv1JjeQJhKdS_-Ru-mqD1bsLAPuw7ErH_DOm6JnCOUYFqW9QVj1TXHpapQjmgJUnsK7eu9VvJR_q9kZ4wPKj97amH6QAtn94Nt3a2duILoKYKVdXp';
 
 
-  Future<String> sendNotification() async {
-    
+  Future<String> sendNotification(NotificationData notificationData) async {
+
     Map data = {
       'click_action':'FLUTTER_NOTIFICATION_CLICK',
-      'title':'title',
-      'message':'message'
+      'title': notificationData.title,
+      'body':notificationData.body
     };
 
     Map message = {
       'data': data,
-      'title':'title',
-      'body':'body'
+      'title':notificationData.title,
+      'body':notificationData.body
     };
 
     Map payload = {
-      'to': token,
+      'to': 'TOKEN',
       'priority':'high',
       'notification': message
     };

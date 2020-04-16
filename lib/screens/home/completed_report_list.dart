@@ -1,6 +1,8 @@
 import 'dart:io';
-import 'package:hospital_report/screens/admin/full_report.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:hospital_report/models/user.dart';
 import 'package:hospital_report/screens/admin/report_viewer.dart';
+import 'package:hospital_report/screens/home/new_report_form.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/widgets.dart' as pdfLib;
 import 'package:flutter/material.dart';
@@ -10,28 +12,30 @@ import 'package:hospital_report/services/report.dart';
 import 'package:printing/printing.dart';
 import 'package:provider/provider.dart';
 
-class AdminCompletedReportList extends StatefulWidget {
+class CompletedReportList extends StatefulWidget {
   @override
-  _AdminCompletedReportListState createState() => _AdminCompletedReportListState();
+  _CompletedReportListState createState() => _CompletedReportListState();
 }
 
-class _AdminCompletedReportListState extends State<AdminCompletedReportList> {
+class _CompletedReportListState extends State<CompletedReportList> {
   @override
   Widget build(BuildContext context) {
 
+    final user = Provider.of<FirebaseUser>(context);
+
     return StreamProvider<List<Report>>.value(
-      value: ReportService().completedReports,
+      value: ReportService().getUserCompleteReports(user.uid),
       child: Scaffold(
         body: Container(
             child: ReportList()
         ),
         floatingActionButton: FloatingActionButton.extended(
-          label: Text('Cetak Laporan'),
+          label: Text('Tambah Laporan'),
           backgroundColor: Colors.red[300],
-          icon: Icon(Icons.picture_as_pdf),
+          icon: Icon(Icons.add),
           onPressed:  () => Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (_) => FullReport(),
+              builder: (_) => ReportForm(),
             ),
           ),
         ),
@@ -52,9 +56,9 @@ class _AdminCompletedReportListState extends State<AdminCompletedReportList> {
       pdfLib.MultiPage(
         build: (context) => [
           pdfLib.Center(
-            child: pdfLib.Text(
-              'Laporan Tahun'
-            )
+              child: pdfLib.Text(
+                  'Laporan Tahun'
+              )
 
           ),
           pdfLib.Table.fromTextArray(context: context, data: <List<String>>[

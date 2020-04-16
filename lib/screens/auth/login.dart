@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hospital_report/services/auth.dart';
 import 'package:hospital_report/services/user.dart';
 import 'package:hospital_report/shared/BgClipper.dart';
+import 'package:hospital_report/shared/loading.dart';
 
 class Login extends StatefulWidget {
 
@@ -29,7 +30,7 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return loading ? Loading() : Scaffold(
         backgroundColor: Colors.white,
         body: SingleChildScrollView(
           child: Container(
@@ -41,21 +42,21 @@ class _LoginState extends State<Login> {
                     width: double.infinity,
                     height: 400,
                     decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: <Color>[
-                          Colors.red[200],
-                          Colors.red[400]
-                        ]
-                      )
+                        gradient: LinearGradient(
+                            colors: <Color>[
+                              Colors.red[200],
+                              Colors.red[400]
+                            ]
+                        )
                     ),
                     child: Center(
                       child: Text(
                         'Log Masuk',
                         style: TextStyle(
-                          color: Colors.white,
-                          letterSpacing: 5.0,
-                          fontSize: 30.0,
-                          fontWeight: FontWeight.w500
+                            color: Colors.white,
+                            letterSpacing: 5.0,
+                            fontSize: 30.0,
+                            fontWeight: FontWeight.w500
                         ),
                       ),
                     ),
@@ -124,23 +125,38 @@ class _LoginState extends State<Login> {
                           ),
                         ),
                         SizedBox(height: 30,),
+                        Text(
+                          error,
+                          style: TextStyle(color: Colors.red, fontSize: 14.0),
+                        ),
+                        SizedBox(height: 30.0),
                         ButtonTheme(
                           height: 50.0,
                           minWidth: double.infinity,
                           child: RaisedButton(
                             shape: RoundedRectangleBorder(
-                              borderRadius: new BorderRadius.circular(18.0)
+                                borderRadius: new BorderRadius.circular(18.0)
                             ),
                             onPressed: () async {
                               if(_formKey.currentState.validate()) {
                                 setState(() => loading = true );
+                                print('loading: ${loading}');
                                 FirebaseUser user = await _auth.signIn(email, password);
-                                dynamic token = await UserService(uid:user.uid).saveDeviceToken();
-                                if(token == null) {
+                                print('user : ${user}');
+                                if(user == null) {
                                   setState(() {
                                     error = 'Invalid email or password';
                                     loading = false;
                                   });
+                                }
+                                else {
+                                  dynamic token = await UserService(uid:user.uid).saveDeviceToken();
+                                  if(token == null) {
+                                    setState(() {
+                                      error = 'Invalid email or password';
+                                      loading = false;
+                                    });
+                                  }
                                 }
                               }
                             },
@@ -155,7 +171,7 @@ class _LoginState extends State<Login> {
                         SizedBox(height: 70,),
                         FlatButton(
                           child: Text('Daftar Akaun', style: TextStyle(
-                          color: Colors.red[400]
+                              color: Colors.red[400]
                           ),),
                           onPressed: () {
                             widget.toggleView();

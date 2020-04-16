@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:hospital_report/models/user.dart';
 import 'package:hospital_report/services/auth.dart';
 import 'package:hospital_report/shared/GradientAppBar.dart';
 import 'package:hospital_report/shared/OtherClipper.dart';
 import 'package:hospital_report/shared/loading.dart';
+import 'package:provider/provider.dart';
 
 class Profile extends StatefulWidget {
   @override
@@ -20,6 +22,7 @@ class _ProfileState extends State<Profile> {
   String error = '';
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<User>(context);
     return Scaffold(
         backgroundColor: Colors.white,
         body: SingleChildScrollView(
@@ -30,7 +33,7 @@ class _ProfileState extends State<Profile> {
                   clipper: OtherClipper(),
                   child: Container(
                     width: double.infinity,
-                    height: 300,
+                    height: 250,
                     decoration: BoxDecoration(
                         gradient: LinearGradient(
                             colors: <Color>[
@@ -52,13 +55,58 @@ class _ProfileState extends State<Profile> {
                     ),
                   ),
                 ),
-                Card(
-                  margin: EdgeInsets.fromLTRB(20.0, 6.0, 20.0, 0.0),
-                  child: ListTile(
-                    title: Text('test'),
-                    subtitle: Text('test2'),
+                Container(
+                  padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
+                  child: Container(
+                    padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(5.0),
+                      boxShadow: [
+                        BoxShadow(
+                            color: Color.fromRGBO(143, 148, 251, .2),
+                            blurRadius: 20.0,
+                            offset: Offset(0, 10)
+                        )
+                      ],
+                    ),
+                    child: Column(
+                      children: <Widget>[
+
+                        ListTile(
+                          title: Text("Emel"),
+                          subtitle: Text(user.email),
+                          leading: Icon(Icons.email),
+                        ),
+                        Divider(),
+                        ListTile(
+                          title: Text("Nama"),
+                          subtitle: Text(user.name),
+                          leading: Icon(Icons.person),
+                        ),
+                        Divider(),
+                        ButtonTheme(
+                          height: 50.0,
+                          minWidth: double.infinity,
+                          child: RaisedButton(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: new BorderRadius.circular(18.0)
+                            ),
+                            onPressed: () async {
+
+                            },
+                            color: Colors.red[400],
+                            child: Text(
+                              'Kemaskini',
+                              style: TextStyle(color: Colors.white),
+                            ),
+
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
+                )
               ],
             ),
           ),
@@ -67,9 +115,21 @@ class _ProfileState extends State<Profile> {
         label: Text('Log Keluar'),
         backgroundColor: Colors.red[400],
         icon: Icon(Icons.power_settings_new),
-        onPressed: () => (){},
+        onPressed: (){
+          _auth.signOut();
+        },
       ),
 
     );
   }
+
+
 }
+
+const TitleStyle = TextStyle(
+    fontSize: 20, fontWeight: FontWeight.w600, color: Colors.black, height: 1.5
+);
+
+const SubtitleStyle = TextStyle(
+    fontSize: 18, fontWeight: FontWeight.w500, color: Colors.black54, height: 1.5
+);

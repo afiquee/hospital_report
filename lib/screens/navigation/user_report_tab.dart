@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:hospital_report/screens/admin/admin_completed_report_list.dart';
 import 'package:hospital_report/screens/admin/admin_incomplete_report_list.dart';
-import 'package:hospital_report/screens/profile.dart';
-import 'package:hospital_report/screens/second_page.dart';
+import 'package:hospital_report/screens/home/completed_report_list.dart';
+import 'package:hospital_report/screens/home/incomplete_report_list.dart';
 
-class AdminReportTab extends StatefulWidget {
+class UserReportTab extends StatefulWidget {
   @override
-  _AdminReportTabState createState() => _AdminReportTabState();
+  _UserReportTabState createState() => _UserReportTabState();
 }
 
 final tabs = [
-  AdminCompletedReportList(),
-  AdminIncompleteReportList()
+  CompletedReportList(),
+  IncompleteReportList()
 ];
 
-class _AdminReportTabState extends State<AdminReportTab> {
+class _UserReportTabState extends State<UserReportTab> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -25,12 +25,12 @@ class _AdminReportTabState extends State<AdminReportTab> {
           preferredSize: Size.fromHeight(80),
           child: Container(
             decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: <Color>[
-                  Colors.red[200],
-                  Colors.red[400]
-                ]
-              )
+                gradient: LinearGradient(
+                    colors: <Color>[
+                      Colors.red[200],
+                      Colors.red[400]
+                    ]
+                )
             ),
             child: SafeArea(
               child: Column(

@@ -34,10 +34,6 @@ class Wrapper extends StatefulWidget {
 
 class _WrapperState extends State<Wrapper> {
 
-
-
-
-
   final notifications = FlutterLocalNotificationsPlugin();
   final FirebaseMessaging _fcm = FirebaseMessaging();
   StreamSubscription iosSubscription;
@@ -46,7 +42,6 @@ class _WrapperState extends State<Wrapper> {
     context,
     MaterialPageRoute(builder: (context) => SecondPage(payload: payload)),
   );
-
 
   _initLocalNotifications() {
 
@@ -59,7 +54,6 @@ class _WrapperState extends State<Wrapper> {
         InitializationSettings(settingsAndroid, settingsIOS),
         onSelectNotification: onSelectNotification);
   }
-
 
   @override
   void initState() {
@@ -113,7 +107,11 @@ class _WrapperState extends State<Wrapper> {
 
     final user = Provider.of<FirebaseUser>(context);
 
-    return user == null ? Authenticate() : StreamProvider<User>.value(value: UserService().user(user.uid),
-    child: NavigationBar());
+    return user == null ? Authenticate() : MultiProvider(
+      providers: [
+        StreamProvider<List<User>>.value(value: UserService().users),
+        StreamProvider<User>.value(value: UserService().user(user.uid)),
+      ],
+      child: NavigationBar());
   }
 }
