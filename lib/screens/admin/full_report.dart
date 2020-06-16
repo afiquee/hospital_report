@@ -32,8 +32,8 @@ class _FullReportState extends State<FullReport> {
 
   final List<String> location = ['Wad1','Wad2','Wad3','Wad4','Wad5','Wad6','Wad7','JPL','A&E','CSSU','Klinik Pakar','Rekod','Patologi',
     'Pengimejan & Diagnostik','Sajian','Fisioterapi','Cara Kerja','Kawalan Infeksi','Pusat Sumber','Kualiti','Hemodialisis','Kejuruteraan'
-    ,'(Pengurusan) Kewangan','(Pengurusan) Sumber Manusia','(Pengurusan) Keselamatan','(Pengurusan) (Pentadbiran) Surat Menyurat',
-    '(Pengurusan) (Pentadbiran) Latihan','(Pengurusan) ICT','(Pengurusan) Penyelia Jururawat','(Pengurusan) Penyelia Hospital',
+    ,'Pengurusan -> Kewangan','Pengurusan -> Sumber Manusia','Pengurusan -> Keselamatan','Pengurusan -> Pentadbiran -> Surat Menyurat',
+    'Pengurusan -> Pentadbiran -> Latihan','Pengurusan -> ICT','Pengurusan -> Penyelia Jururawat','Pengurusan -> Penyelia Hospital',
     'Farmasi Pesakit Luar','Farmasi Pesakit Dalam','Farmasi Logistic'];
 
   @override

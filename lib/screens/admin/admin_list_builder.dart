@@ -1,17 +1,17 @@
 import 'package:hospital_report/models/report.dart';
 import 'package:flutter/material.dart';
+import 'package:hospital_report/screens/admin/admin_report_tile.dart';
 import 'package:hospital_report/screens/navigation/admin/admin_report_tab.dart';
 import 'package:hospital_report/screens/navigation/user_report_tab.dart';
 import 'package:provider/provider.dart';
 
-import 'report_tile.dart';
 
-class ReportList extends StatefulWidget {
+class AdminListBuilder extends StatefulWidget {
   @override
-  _ReportListState createState() => _ReportListState();
+  _AdminListBuilderState createState() => _AdminListBuilderState();
 }
 
-class _ReportListState extends State<ReportList> {
+class _AdminListBuilderState extends State<AdminListBuilder> {
   @override
   Widget build(BuildContext context) {
     final reports = Provider.of<List<Report>>(context) ?? [];
@@ -25,7 +25,7 @@ class _ReportListState extends State<ReportList> {
     return ListView.builder(
       itemCount: reports.length,
       itemBuilder: (context,index) {
-        return ReportTile(report: reports[index]);
+        return AdminReportTile(report: reports[index]);
 
       },
     );

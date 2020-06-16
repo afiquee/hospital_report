@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:hospital_report/models/user.dart';
 import 'package:hospital_report/services/auth.dart';
 import 'package:hospital_report/services/user.dart';
 import 'package:hospital_report/shared/BgClipper.dart';
@@ -186,9 +187,8 @@ class _RegisterState extends State<Register> {
                                   return;
                                 }
                                 setState(() => loading = true );
-                                dynamic result = await _auth.register(email, password, name);
-                                print('result : '+result.toString());
-                                if(result == null) {
+                                FirebaseUser user = await _auth.register(email, password, name);
+                                if(user == null) {
                                   setState(() {
                                     error = 'Emel tidak sah';
                                     loading = false;

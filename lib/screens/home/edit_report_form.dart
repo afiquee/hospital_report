@@ -1,30 +1,31 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_form_bloc/flutter_form_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:hospital_report/models/notification_data.dart';
-import 'package:hospital_report/models/user.dart';
-import 'package:hospital_report/services/push_notification.dart';
+import 'package:hospital_report/models/report.dart';
 import 'package:hospital_report/services/report.dart';
-import 'package:hospital_report/services/user.dart';
 import 'package:hospital_report/shared/OtherClipper.dart';
-import 'package:hospital_report/shared/constants.dart';
 import 'package:hospital_report/shared/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class ReportForm extends StatefulWidget {
+class EditReportForm extends StatefulWidget {
+
+  final Report report;
+  EditReportForm({this.report});
+
   @override
-  _ReportFormState createState() => _ReportFormState();
+  _EditReportFormState createState() => _EditReportFormState();
 }
 
-class _ReportFormState extends State<ReportForm> {
+class _EditReportFormState extends State<EditReportForm> {
 
   final _formKey = GlobalKey<FormState>();
   final List<String> location = ['Wad1','Wad2','Wad3','Wad4','Wad5','Wad6','Wad7','JPL','A&E','CSSU','Klinik Pakar','Rekod','Patologi',
     'Pengimejan & Diagnostik','Sajian','Fisioterapi','Cara Kerja','Kawalan Infeksi','Pusat Sumber','Kualiti','Hemodialisis','Kejuruteraan'
-    ,'Pengurusan -> Kewangan','Pengurusan -> Sumber Manusia','Pengurusan -> Keselamatan','Pengurusan -> Pentadbiran -> Surat Menyurat',
-    'Pengurusan -> Pentadbiran -> Latihan','Pengurusan -> ICT','Pengurusan -> Penyelia Jururawat','Pengurusan -> Penyelia Hospital',
-    'Farmasi Pesakit Luar','Farmasi Pesakit Dalam','Farmasi Logistic', 'Pejabat Pengarah'];
+    ,'(Pengurusan) Kewangan','(Pengurusan) Sumber Manusia','(Pengurusan) Keselamatan','(Pengurusan) (Pentadbiran) Surat Menyurat',
+    '(Pengurusan) (Pentadbiran) Latihan','(Pengurusan) ICT','(Pengurusan) Penyelia Jururawat','(Pengurusan) Penyelia Hospital',
+    'Farmasi Pesakit Luar','Farmasi Pesakit Dalam','Farmasi Logistic'];
+
+  Report _editedReport;
 
 
   String _currentProblem;
@@ -33,14 +34,10 @@ class _ReportFormState extends State<ReportForm> {
   bool loading = false;
   String error = '';
 
-  List<String> getLocation() {
-    location.sort((a, b) => a.toString().compareTo(b.toString()));
-    return location;
-  }
-
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<FirebaseUser>(context);
+
     return loading ? Loading() : Scaffold(
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
@@ -102,6 +99,7 @@ class _ReportFormState extends State<ReportForm> {
                                       border: Border(bottom: BorderSide(color: Colors.grey[100]))
                                   ),
                                   child: TextFormField(
+                                    initialValue: widget.report.problem,
                                     validator: (val) => val.isEmpty ? 'Sila isi masalah' : null,
                                     onChanged: (val) {
                                       setState(() => _currentProblem = val);
@@ -122,6 +120,7 @@ class _ReportFormState extends State<ReportForm> {
                                       border: Border(bottom: BorderSide(color: Colors.grey[100]))
                                   ),
                                   child: TextFormField(
+                                    initialValue: widget.report.description,
                                     validator: (val) => val.isEmpty ? 'Sila isi deskripsi' : null,
                                     onChanged: (val) {
                                       setState(() => _currentDescription = val);
@@ -146,9 +145,9 @@ class _ReportFormState extends State<ReportForm> {
 
 
                                     ),
-                                    value: _currentLocation,
+                                    value: widget.report.location,
                                     validator: (val) => val == null ? 'Sila pilih lokasi' : null,
-                                    items: getLocation().map((location){
+                                    items: location.map((location){
                                       return DropdownMenuItem(
                                         value: location,
                                         child: Text(location),
@@ -173,21 +172,17 @@ class _ReportFormState extends State<ReportForm> {
                                   setState(()  {
                                     loading = true;
                                   });
-                                  await  ReportService().updateReport(
-                                      _currentProblem,
-                                      _currentDescription,
-                                      _currentLocation,
+                                  await  ReportService(rID: widget.report.rID).updateReport(
+                                      _currentProblem ?? widget.report.problem,
+                                      _currentDescription ?? widget.report.description,
+                                      _currentLocation ?? widget.report.location,
                                       user.uid
                                   );
-                                  var tokens = await UserService().getAdminToken();
-                                  print(tokens.toString());
-                                  NotificationData notificationData = new NotificationData(title: 'Laporan baharu',body: '$_currentProblem di lokasi $_currentLocation',tokens: tokens);
-                                  await PushNotificationService().sendAdminNotification(notificationData);
                                   setState(()  {
                                     loading = false;
                                   });
                                   Fluttertoast.showToast(
-                                      msg: "Laporan berjaya dihantar!",
+                                      msg: "Laporan berjaya dikemaskini!",
                                       toastLength: Toast.LENGTH_SHORT,
                                       gravity: ToastGravity.BOTTOM,
                                       timeInSecForIosWeb: 1,
@@ -195,7 +190,7 @@ class _ReportFormState extends State<ReportForm> {
                                       textColor: Colors.white,
                                       fontSize: 16.0
                                   );
-                                  Navigator.pop(context);
+                                  Navigator.pop(context, );
 
                                 }
                               },

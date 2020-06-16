@@ -84,25 +84,6 @@ class _ProfileState extends State<Profile> {
                           subtitle: Text(user.name),
                           leading: Icon(Icons.person),
                         ),
-                        Divider(),
-                        ButtonTheme(
-                          height: 50.0,
-                          minWidth: double.infinity,
-                          child: RaisedButton(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: new BorderRadius.circular(18.0)
-                            ),
-                            onPressed: () async {
-
-                            },
-                            color: Colors.red[400],
-                            child: Text(
-                              'Kemaskini',
-                              style: TextStyle(color: Colors.white),
-                            ),
-
-                          ),
-                        ),
                       ],
                     ),
                   ),

@@ -9,9 +9,12 @@ class ReportService {
 
   final CollectionReference reportCollections = Firestore.instance.collection('report');
 
-  Future _getCurrentUser () async {
-    FirebaseUser user = await FirebaseAuth.instance.currentUser();
-    return user;
+
+  Stream <Report> report (){
+    return reportCollections
+        .document(rID)
+        .snapshots()
+        .map( (snap) => Report.fromMap(snap.documentID,snap.data));
   }
 
   Future updateReport(String problem, String description, String location, String uid) async {
@@ -19,7 +22,7 @@ class ReportService {
       'problem':problem,
       'description':description,
       'location':location,
-      'reportTime': new DateTime.now(),
+      'reportTime': Timestamp.now(),
       'status': 'Belum Selesai',
       'reporter': uid,
     });
@@ -37,7 +40,7 @@ class ReportService {
 
   Future completeReport() async {
     return await reportCollections.document(rID).updateData({
-      'reportTime': new DateTime.now(),
+      'completeTime': Timestamp.now(),
       'status': 'Selesai',
     });
   }
@@ -58,7 +61,9 @@ class ReportService {
   }
 
   Stream<List<Report>> get incompleteReports {
-    return reportCollections.where("status",isEqualTo: "Belum Selesai")
+    return reportCollections
+        .where("status",isEqualTo: "Belum Selesai")
+        .orderBy('reportTime',descending: true)
         .snapshots().map((snapshot) => snapshot
         .documents.map((doc) => Report.fromMap(doc.documentID,doc.data))
         .toList()
@@ -67,7 +72,9 @@ class ReportService {
 
 
   Stream<List<Report>> get completedReports {
-    return reportCollections.where("status",isEqualTo: "Selesai")
+    return reportCollections
+        .where("status",isEqualTo: "Selesai")
+        .orderBy('reportTime',descending: true)
         .snapshots().map((snapshot) => snapshot
         .documents.map((doc) => Report.fromMap(doc.documentID,doc.data))
         .toList()
@@ -92,6 +99,10 @@ class ReportService {
         .documents.map((doc) => Report.fromMap(doc.documentID,doc.data))
         .toList()
     );
+  }
+
+  void deleteReport() {
+    reportCollections.document(rID).delete();
   }
 
 

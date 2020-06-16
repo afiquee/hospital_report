@@ -36,6 +36,7 @@ class UserService {
 
   Stream<List<User>> get users {
     return userCollections
+        .orderBy("email", descending: false)
         .snapshots().map((snapshot) => snapshot
         .documents.map((doc) => User.fromMap(doc.data))
         .toList()

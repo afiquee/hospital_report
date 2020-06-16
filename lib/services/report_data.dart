@@ -13,7 +13,9 @@ class ReportDataService {
 
   Future<List<ReportData>> getReportForPrint() async {
     //get list of reports
-    var list = await reportCollections.where("status",isEqualTo: "Selesai")
+    var list = await reportCollections
+        .where("status",isEqualTo: "Selesai")
+        .orderBy('reportTime',descending: true)
         .getDocuments().then((data) => data.documents.map((doc) => ReportData.fromMap(doc.documentID, doc.data)).toList());
     return list;
   }

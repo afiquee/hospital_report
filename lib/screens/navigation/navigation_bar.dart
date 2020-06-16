@@ -24,6 +24,7 @@ class _NavigationBarState extends State<NavigationBar> {
       body: tabs[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
+        fixedColor: Colors.red,
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.assignment),

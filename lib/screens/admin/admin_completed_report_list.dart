@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:hospital_report/screens/admin/admin_list_builder.dart';
 import 'package:hospital_report/screens/admin/full_report.dart';
 import 'package:hospital_report/screens/admin/report_viewer.dart';
 import 'package:path_provider/path_provider.dart';
@@ -23,7 +24,7 @@ class _AdminCompletedReportListState extends State<AdminCompletedReportList> {
       value: ReportService().completedReports,
       child: Scaffold(
         body: Container(
-            child: ReportList()
+            child: AdminListBuilder()
         ),
         floatingActionButton: FloatingActionButton.extended(
           label: Text('Cetak Laporan'),

@@ -85,39 +85,87 @@ class AdminReportDetail extends StatelessWidget {
                                   )
                                 ],
                               ),
-                              child: Column(
-                                children: <Widget>[
+                              child: Builder(
+                                builder: (context) {
+                                  if(report.status == 'Belum Selesai') {
+                                    return Column(
+                                      children: <Widget>[
 
-                                  ListTile(
-                                    title: Text("Masalah"),
-                                    subtitle: Text(report.problem),
-                                    leading: Icon(Icons.report_problem),
-                                  ),
-                                  Divider(),
-                                  ListTile(
-                                    title: Text("Deskripsi"),
-                                    subtitle: Text(report.description),
-                                    leading: Icon(Icons.description),
-                                  ),
-                                  Divider(),
-                                  ListTile(
-                                    title: Text("Lokasi"),
-                                    subtitle: Text(report.location),
-                                    leading: Icon(Icons.location_on),
-                                  ),
-                                  Divider(),
-                                  report.completeTime ?? ListTile(
-                                    title: Text("Waktu dilapor"),
-                                    subtitle: Text(' ${formatTime(report.reportTime)} ${formatDate(report.reportTime)} '),
-                                    leading: Icon(Icons.access_time),
-                                  ),
-                                  Divider(),
-                                  ListTile(
-                                    title: Text("Dilapor oleh"),
-                                    subtitle: Text(user.name),
-                                    leading: Icon(Icons.location_on),
-                                  ),
-                                ],
+                                        ListTile(
+                                          title: Text("Masalah"),
+                                          subtitle: Text(report.problem),
+                                          leading: Icon(Icons.report_problem),
+                                        ),
+                                        Divider(),
+                                        ListTile(
+                                          title: Text("Deskripsi"),
+                                          subtitle: Text(report.description),
+                                          leading: Icon(Icons.description),
+                                        ),
+                                        Divider(),
+                                        ListTile(
+                                          title: Text("Lokasi"),
+                                          subtitle: Text(report.location),
+                                          leading: Icon(Icons.location_on),
+                                        ),
+                                        Divider(),
+                                        ListTile(
+                                          title: Text("Waktu dilapor"),
+                                          subtitle: Text(' ${formatTime(report.reportTime)} ${formatDate(report.reportTime)} '),
+                                          leading: Icon(Icons.access_time),
+                                        ),
+                                        Divider(),
+                                        ListTile(
+                                          title: Text("Dilapor oleh"),
+                                          subtitle: Text(user.name),
+                                          leading: Icon(Icons.location_on),
+                                        ),
+                                      ],
+                                    );
+                                  }
+                                  return Column(
+                                    children: <Widget>[
+
+                                      ListTile(
+                                        title: Text("Masalah"),
+                                        subtitle: Text(report.problem),
+                                        leading: Icon(Icons.report_problem),
+                                      ),
+                                      Divider(),
+                                      ListTile(
+                                        title: Text("Deskripsi"),
+                                        subtitle: Text(report.description),
+                                        leading: Icon(Icons.description),
+                                      ),
+                                      Divider(),
+                                      ListTile(
+                                        title: Text("Lokasi"),
+                                        subtitle: Text(report.location),
+                                        leading: Icon(Icons.location_on),
+                                      ),
+                                      Divider(),
+                                      ListTile(
+                                        title: Text("Waktu dilapor"),
+                                        subtitle: Text(' ${formatTime(report.reportTime)} ${formatDate(report.reportTime)} '),
+                                        leading: Icon(Icons.access_time),
+                                      ),
+                                      Divider(),
+                                      ListTile(
+                                        title: Text("Waktu selesai"),
+                                        subtitle: Text(' ${formatTime(report.completeTime)} ${formatDate(report.completeTime)} '),
+                                        leading: Icon(Icons.access_time),
+                                      ),
+                                      Divider(),
+                                      ListTile(
+                                        title: Text("Dilapor oleh"),
+                                        subtitle: Text(user.name),
+                                        leading: Icon(Icons.location_on),
+                                      ),
+
+                                    ],
+                                  );
+
+                                },
                               ),
                             ),
                           )
